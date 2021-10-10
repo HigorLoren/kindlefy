@@ -1,0 +1,29 @@
+{
+  "name": "kindlefy",
+  "version": "0.1.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HigorLoren/kindlefy.git"
+  },
+  "author": "HigorLoren",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.22.0",
+    "cheerio": "^1.0.0-rc.10",
+    "config": "^3.3.6",
+    "dotenv": "^10.0.0",
+    "eta": "^1.12.3",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.4.1",
+    "helmet": "^4.6.0",
+    "pretty": "^2.0.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7"
+  }
+}

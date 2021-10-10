@@ -1,0 +1,9 @@
+{
+  "rateLimit": {
+    "windowMs": 60000,
+    "max": 100
+  },
+  "mcache": {
+    "time": 10000
+  }
+}

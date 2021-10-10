@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript’s sendBeacon()</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="kindle">
+    <div class="container">
+      <div class="meta">
+        <div class="info">
+          <h1>JavaScript’s sendBeacon()</h1>
+          <p class="subtitle">The Beacon API is used to send non-blocking requests</p>
+          <div class="author">
+            <div class="authorInfo">
+              <div class="authorName">
+                <a href="https://medium.com/@laura.nickerson">Laura Nickerson</a>
+              </div>
+              <div class="authorSub">
+                Mar 21, 2020 <span class="median-divider">·</span> 3 min read
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <article>
+        <p>
+          I was recently tasked to log a variety of window events within a modal that held an iframe
+          widget. Most of these were a simple POST request containing messages provided by the third
+          party iframe source.
+        </p>
+        <p>
+          This presented a separate issue of permissions between sources. I was unable to navigate
+          to the parent node of the iframe because the origin sources were different. This led me to
+          eventually finding the <code>sendBeacon()</code> method!
+        </p>
+
+        <div class="separator" role="separator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <p>
+          A method from the Beacon API, it allows you to send a POST request with two parameters —
+          the URL endpoint for the request as well as the data being passed.
+          <code>sendBeacon</code> is particularly useful if you want to send a small amount of data
+          and do not particularly care about a response.
+        </p>
+        <pre><code>navigator.sendBeacon(url, data);</code></pre>
+        <p>
+          One of — if not <i>the</i> — main use for <code>sendBeacon</code> is to solve the issue of
+          asynchronous requests being cancelled by the browser. In my example, I wanted to send a
+          message to a database that would log when the modal window closed. Using a
+          <code>XMLHttpRequest</code>, the modal would close too quickly and the POST request did
+          not have the time to fire off.
+        </p>
+        <p>
+          With more and more browsers deprecating or removing support for synchronous events due to
+          the impact on the user experience I wanted to look for a solution that would not block the
+          UI thread.
+        </p>
+
+        <pre><code>window.addEventListener("unload", function() {
+  var event_type = "window_closed";
+  var base = document.getElementById('iframe-div');
+  var uuid_data = base.getAttribute( 'data-uuid');
+  var primary_id = base.getAttribute( 'data-primary-id');
+
+  var formData = new FormData();
+  FormData.append("uuid_data", uuid_data);
+  FormData.append("event_type", event_type);
+  FormData.append("primary_id", primary_id);
+
+  navigator.sendBeacon('/endpoint/url', FormData);
+});</code></pre>
+        <p>
+          Above is what ended up being my solution — with some variable name changes for the purpose
+          of this post. By using the <code>unload</code> event, the function is fired when the user
+          navigates away from the window. So on <code>unload</code>, all the information desired to
+          send is gathered into a <code>FormData</code> object and sent as the second argument to
+          the URL that will receive the data.
+        </p>
+
+        <div class="separator" role="separator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <p>
+          A second argument is not required, you could call <code>sendBeacon</code> without any data
+          or with a url containing query params. If you do want to send data, you can send a string,
+          <code>FormData</code> object, <code>Blob</code>, or an <code>ArrayBufferView</code>.
+        </p>
+
+        <p>
+          The documentation says you can also send <code>URLSearchParams</code>, but I had read a
+          few mentions that this can have some issues, so I decided to collect my data into a
+          <code>FormData</code> object.
+        </p>
+
+        <p>
+          Since <code>sendBeacon</code> does not require a response from the server, it instead
+          returns <code>true</code> if the data was queued for transfer — and if not it returns
+          <code>false</code>.
+        </p>
+
+        <p>
+          It’s worth noting that sendBeacon is not supported by IE11 yet, but is supported in pretty
+          much everything else.
+        </p>
+
+        <div class="separator" role="separator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <p>
+          I wanted to write up this quick post because after implementing it, I thought sendBeacon
+          was a pretty cool solution and it does not seem to be very well known. It provides an
+          alternative that does not impact the load time of the next page or slow anything down.
+        </p>
+
+        <p>
+          Besides the documentation, I found <a href="https://golb.hplar.ch/2018/09/beacon-api.html"><i>this page</i></a> to include some helpful examples and
+          additional information. Thanks for reading!
+        </p>
+  </body>
+</html>

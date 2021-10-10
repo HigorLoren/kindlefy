@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="<%= it.lang %>">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= it.title %></title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="kindle">
+    <div class="container">
+      <div class="meta">
+        <div class="info">
+          <h1><%= it.title %></h1>
+          <p class="subtitle"><%= it.description %></p>
+          <div class="author">
+            <div class="authorInfo">
+              <div class="authorName">
+                <p><%= it.author %></p>
+              </div>
+              <div class="authorSub">
+                <%= it.publishedAt %> <span class="median-divider">·</span> <%= it.readingTime %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <article>
+        <% it.paragraphs.forEach(function(paragraph){ %>
+          <p><%= paragraph %></p>
+        <% }) %>
+      </article>
+    </div>
+  </body>
+</html>
